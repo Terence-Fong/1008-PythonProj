@@ -1,5 +1,6 @@
 import io
 import sys
+import json
 import folium
 from PyQt5 import QtWidgets, QtWebEngineWidgets
 from PyQt5.QtWidgets import QLabel
@@ -20,14 +21,23 @@ class Window(QtWidgets.QMainWindow):
         l1 = QLabel()
         l1.setText("Start Location:")
         start = QtWidgets.QComboBox(self)
-        start.addItem("Punggol MRT")
-        start.addItem("Punggol LRT")
+
+        # add the starting location to drop down list
+        with open('LRT.json') as file:
+            data = json.load(file)
+        for key in data.keys():
+            start.addItem(data[key][0]['NAME'])
 
         # final location dropbox
         l2 = QLabel()
         l2.setText("Final Location:")
         final = QtWidgets.QComboBox(self)
-        final.addItem("test")
+
+        # add the final location to drop down list
+        with open('Punggol_HDB.json') as file:
+            data = json.load(file)
+        for key in data.keys():
+            final.addItem(data[key][0]['ADD'])
 
         # search button
         search = QtWidgets.QPushButton(self.tr("Find shortest path"))
@@ -44,6 +54,8 @@ class Window(QtWidgets.QMainWindow):
 
         # button container for vertical layout
         button_container = QtWidgets.QWidget()
+        button_container.setContentsMargins(50, 50, 50, 50)
+
         vlay = QtWidgets.QVBoxLayout(button_container)
         vlay.setSpacing(20)
         vlay.addWidget(l1)
@@ -64,6 +76,7 @@ class Window(QtWidgets.QMainWindow):
         data = io.BytesIO()
         m.save(data, close_file=False)
         self.viewmap.setHtml(data.getvalue().decode())
+
 
 
 if __name__ == "__main__":
