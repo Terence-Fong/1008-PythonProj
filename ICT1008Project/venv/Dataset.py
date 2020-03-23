@@ -64,6 +64,15 @@ class Graph:
         # Both ways
         self.data[fromNID][(toNID, (BusSvc, direction))] = weight
 
+    def addLRTEdge(self, fromNID, toNID, weight=0):
+        if fromNID not in self.data:
+            self.addVertex(fromNID)
+        if toNID not in self.data:
+            self.addVertex(toNID)
+
+        # Both ways
+        self.data[fromNID][toNID] = weight
+
     def printGraph(self):
         for x in self.data:
             print(str(x) + ": ", end="")

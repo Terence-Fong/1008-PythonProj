@@ -91,7 +91,7 @@ def addLRTtoBusStops(mapGraph, infoDict):
                     # find closest bus stops to the hdb
                     dist = distance(infoDict[key]['Latitude'], infoDict[key]['Longitude'], infoDict[key2]['Latitude'],
                                     infoDict[key2]['Longitude'])
-                    mapGraph.addHDBEdge(key, key2, dist)
+                    mapGraph.addLRTEdge(key, key2, dist)
     return mapGraph
 
 def distance(lat1, lon1, lat2, lon2):
