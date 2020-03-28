@@ -1,6 +1,3 @@
-from onemapsg import OneMapClient
-from Dataset import Graph
-
 import json
 import heapq
 
@@ -13,13 +10,11 @@ def get_jsonHDB():
     return results
 
 def get_jsonRoutes():
-    #LRT.json to be replaced with routes json
-    results = json.loads(open("LRT.json").read())
+    results = json.loads(open("Bus_Route.json").read())
     return results
 
 def get_jsonStops():
-    #LRT.json to be replaced by stops json
-    results = json.load(open("LRT.json").read())
+    results = json.loads(open("BusStop.json").read())
     return results
 
 #Need json for every bus stop and lrt
@@ -30,11 +25,11 @@ hdb = get_jsonHDB()
 routes = get_jsonRoutes()
 stops = get_jsonStops()
 
-#converting flat lists into dictionaries of Descriptions THE KEY IS DESCRIPTION
-stop_map = {stop['Description']: stop for stop in stops}
-#converting flat lists into dictionaries of Bus Stop Codes THE KEY IS BUS STOP CODE
-code_map = {stop['BusStopCode']: stop for stop in stops}
+#print(stops)
 
+code_map = {}
+for key, value in stops.items():
+    code_map[value['BusStopCode']] = value
 
 route_map = {}
 
@@ -51,8 +46,7 @@ def calculate_route(start, end): #1
                 routes_map[key] += [route]
 
             # call the djikstra algorithm and get back the total distance and the shortest route
-            distance, path = find_shortest_route(stop_map[start]["BusStopCode"],
-                                                                              stop_map[end]["BusStopCode"], routes_map)
+            distance, path = find_shortest_route(stops[start]["BusStopCode"], stops[end]["BusStopCode"], routes_map)
 
             #print out the route
             for code, service in path:
