@@ -1,5 +1,6 @@
 import json
 import heapq
+import Dataset
 
 def get_jsonLRT():
     results = json.loads(open("LRT.json").read())
@@ -20,6 +21,7 @@ def get_jsonStops():
 #Need json for every bus stop and lrt
 #Need json for all the bus routes and lrt routes
 
+
 lrt = get_jsonLRT()
 hdb = get_jsonHDB()
 routes = get_jsonRoutes()
@@ -32,6 +34,7 @@ for key, value in stops.items():
     code_map[value['BusStopCode']] = value
 
 route_map = {}
+busRoute = []
 
 def calculate_route(start, end): #1
 
@@ -56,8 +59,8 @@ def calculate_route(start, end): #1
 
             #store all the data into the strings
             no_of_stops = "The bus trip took " + str(len(path)) + " stops"
-
             print(no_of_stops)
+            return path, len(path)
 
     else:
         print("Error", "Please enter something")

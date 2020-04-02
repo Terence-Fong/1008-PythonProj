@@ -83,14 +83,23 @@ def populateLRT(mapGraph, infoDict):
 def addLRTtoBusStops(mapGraph, infoDict):
     for key in infoDict:
         # if is LRT
-        if int(key) < 15:
+        if int(key) <= 15:
+            distarr = []
+            key2arr = []
             for key2 in infoDict:
-                # check all bus stop and HDB
-                if len(key2) == 5 or len(key2) == 6:
-                    # find closest bus stops to the hdb
+                # check all bus stop
+                if len(key2) == 5:
+                    # find 2 closest bus stops to the hdb
                     dist = distance(infoDict[key]['Latitude'], infoDict[key]['Longitude'], infoDict[key2]['Latitude'],
                                     infoDict[key2]['Longitude'])
-                    mapGraph.addLRTEdge(key, key2, dist)
+                    distarr.append(dist)
+                    key2arr.append(key2)
+            mapGraph.addHDBEdge(key, key2arr[distarr.index(min(distarr))], min(distarr))
+            minIndex = distarr.index(min(distarr))
+            del key2arr[minIndex]
+            del distarr[minIndex]
+            mapGraph.addHDBEdge(key, key2arr[distarr.index(min(distarr))], min(distarr))
+
     return mapGraph
 
 def distance(lat1, lon1, lat2, lon2):

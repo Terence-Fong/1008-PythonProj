@@ -77,3 +77,16 @@ class Graph:
         for x in self.data:
             print(str(x) + ": ", end="")
             print(str(self.data.get(x)))
+
+    def getHDBBusStop(self, postalCode):
+        for code in self.data[str(postalCode)]:
+            return code
+
+    def getLRTBusStop(self, LRT):
+        twostops = []
+        num = 0
+        for code in self.data[str(LRT)]:
+            if num < 2:
+                twostops.append(code)
+                num += 0
+        return twostops
