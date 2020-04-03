@@ -90,7 +90,7 @@ def programMain(LRTname, HDBadd):
     for code in fullSP:
             lonlat.append((float(infoDict[str(code)]['Latitude']), float(infoDict[str(code)]['Longitude'])))
 
-    return fullSP, fullSPtranslated, busSvc, lonlat
+    return fullSPtranslated, busSvc, lonlat
 
     # fullSP is the full path, fullSPtranslated is translated the codes to names
     # busSvc is the bus svc from fullSP[1] to last stop. The last name of the fullSP is the HDB address

@@ -95,8 +95,8 @@ class Window(QMainWindow):
 
     def findShortestPath(self, start, dest):
         # algorithm function that returns busStop code, shortest path, bus services in a list
-        busCode, pathFound, busSvc = programMain(start, dest)
-        self.search = SearchResult(start, dest, busCode, pathFound, busSvc)
+        pathFound, busSvc, LatLon = programMain(start, dest)
+        self.search = SearchResult(start, dest, pathFound, busSvc, LatLon)
         self.search.show()
 
 
@@ -106,14 +106,13 @@ class SearchResult(QMainWindow):
     dstlat = 0.0
     dstlon = 0.0
     numOfstops = 0
-    coordinates = {}
 
-    def __init__(self, start, dest, busCode, path, services, parent=None):
+    def __init__(self, start, dest, path, services, LatLon, parent=None):
         super(SearchResult, self).__init__(parent)
         self.setWindowTitle(self.tr("Shortest Path found"))
         self.setFixedSize(1500, 800)
-        self.getCoordinates(start, dest, busCode, path)
-        self.searchpage(start, dest, path, services)
+        self.getCoordinates(start, dest)
+        self.searchpage(start, dest, path, services, LatLon)
 
     def calMidpoint(self):
         lat = [self.srcLat, self.dstLat]
@@ -122,11 +121,7 @@ class SearchResult(QMainWindow):
         avg_lon = sum(lon)/len(lon)
         return [avg_lat, avg_lon]
 
-    def getCoordinates(self, start, dest, busCode, path):
-        with open('BusStop.json') as file3:
-            busData = json.load(file3)
-        file3.close()
-
+    def getCoordinates(self, start, dest):
         with open('LRT.json') as file1:
             startdata = json.load(file1)
         file1.close()
@@ -147,19 +142,7 @@ class SearchResult(QMainWindow):
                 self.dstLat = float(finaldata[key][0]['LATITUDE'])
                 self.dstLon = float(finaldata[key][0]['LONGTITUDE'])
 
-        self.coordinates[0] = (self.srcLat, self.srcLon)
-
-        # get bus stops coordinates
-        for i in range(1, len(path)-1):
-            for nodes in busCode:
-                for key in busData:
-                    if nodes == busData[key]['BusStopCode']:
-                        self.coordinates[i] = (float(busData[key]['Latitude']), float(busData[key]['Longitude']))
-
-        self.coordinates[len(path)-1] = (self.dstLat, self.dstLon)
-        print(self.coordinates)
-
-    def searchpage(self, s, d, path, services):
+    def searchpage(self, s, d, path, services, LatLon):
         mid = self.calMidpoint()
 
         # button container for vertical layout
@@ -168,14 +151,14 @@ class SearchResult(QMainWindow):
         logOutput = QTextEdit()
 
         self.numOfstops = len(services)
-        if self.numOfstops != 0:
+        if self.numOfstops != 1:
             logOutput.insertPlainText("The bus trip will take " + str(self.numOfstops) + " stops\n")
-            logOutput.insertPlainText("\nShortest Path found: \n\n")
+            logOutput.insertPlainText("\nShortest Path found: ")
             logOutput.insertPlainText("\nFrom " + path[0] + " walk to " + path[1] + "\n")
             count = 0
             bus = services[0]
             for i in range(len(services)):
-                if bus == services[i]:
+                if bus == services[i] and self.numOfstops != 1:
                     count += 1
                     if i == len(services)-1:
                         buses = bus[0]
@@ -189,9 +172,7 @@ class SearchResult(QMainWindow):
                     bus = services[i + 1]
             logOutput.insertPlainText("\nWalk from " + path[len(path)-2] + " to " + path[len(path)-1])
         else:
-            # print(path)
-            for nodes in range(0, len(path)-1):
-                logOutput.insertPlainText("\nWalk from " + path[nodes] + " to " + path[nodes+1] + "\n")
+            logOutput.insertPlainText("\nWalk from " + path[0] + " to " + path[2] + "\n")
 
         logOutput.setDisabled(True)
 
@@ -213,26 +194,17 @@ class SearchResult(QMainWindow):
         m2 = folium.Map(
             location=mid, zoom_start=15
         )
-        list = []
-        node = []
-
-        print(len(self.coordinates), len(path))
-        for i in range(len(self.coordinates)):
+        if self.numOfstops == 1:
+            del LatLon[1]
+        for i in range(len(LatLon)):
             if i == 0:
-                folium.Marker(location=tuple(self.coordinates[i]), popup=s, icon=folium.Icon(color="red")).add_to(m2)
-            elif i == len(self.coordinates)-1:
-                folium.Marker(location=tuple(self.coordinates[i]), popup=d, icon=folium.Icon(color="red")).add_to(m2)
+                folium.Marker(location=LatLon[i], popup=s, icon=folium.Icon(color="red")).add_to(m2)
+            elif i == len(LatLon) - 1:
+                folium.Marker(location=LatLon[i], popup=d, icon=folium.Icon(color="red")).add_to(m2)
             else:
-                folium.Marker(location=tuple(self.coordinates[i]), popup=path[i]).add_to(m2)
+                folium.Marker(location=LatLon[i], popup=path[i]).add_to(m2)
 
-        for i in range(len(self.coordinates)):
-            list.append(tuple(self.coordinates[i]))
-
-        for i in list:
-            print(i)
-            # folium.Marker(location=i, popup=path[i]).add_to(m2)
-
-        folium.PolyLine(locations=list, color='green').add_to(m2)
+        folium.PolyLine(locations=LatLon, color='green').add_to(m2)
 
         data2 = io.BytesIO()
         m2.save(data2, close_file=False)
