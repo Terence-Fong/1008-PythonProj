@@ -63,6 +63,12 @@ def programMain(LRTname, HDBadd):
         busStopSP.append(stops[0])
         busSvc.append(stops[1])
 
+    # Change the first None value to the bus svc
+    # cleaning up the array
+    for x in range(len(busSvc)):
+        if busSvc[x] is None and len(busSvc) != 1:
+            busSvc[x] = busSvc[x+1]
+
     # Shortest Path from LRT to HDB
     fullSP = []
     fullSP.append(str(LRT))
