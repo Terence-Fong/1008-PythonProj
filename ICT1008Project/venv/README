@@ -1,0 +1,17 @@
+=======================================
+README.TXT
+1008 Python Project
+DOCUMENTAIION FOR SHORTEST-PATH-FIRST TRANSPORTATION PROJECT - PUNGGOL
+
+=======================================
+
+## Necessary Libraries
+`Python3
+-------------------
+1) pip install folium
+2) pip install pyqt5
+-------------------
+
+## Application Ruun
+-------------------
+Run - main.py
