@@ -1,25 +1,3 @@
-import sys
-
-class Vertex:
-    def __init__(self, nid, lon, lat):
-        self.nid = nid
-        self.lon = lon
-        self.lat = lat
-        self.visited = False
-        # Dictionary neighbour with node as key and weight as value
-        self.neighbour = {}
-        # # Set distance to all node to infinity
-        # self.distance = sys.maxsize
-
-    def getNID(self):
-        return self.nid
-
-    def getLongitude(self):
-        return self.lon
-
-    def getLatitude(self):
-        return self.lat
-
 class Graph:
     def __init__(self):
         # Creates a new graph object
