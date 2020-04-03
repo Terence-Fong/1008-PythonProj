@@ -2,8 +2,6 @@ import io
 import sys
 import json
 import folium
-from PyQt5.QtGui import QPixmap, QIcon
-
 from mainLogic import programMain
 from PyQt5 import QtWidgets, QtWebEngineWidgets
 from PyQt5.QtWidgets import QLabel, QPushButton, QApplication, QMainWindow, QComboBox, QTextEdit
@@ -14,8 +12,6 @@ class Window(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle(self.tr("Punggol Transport App"))
         self.setFixedSize(1500, 800)
-        self.setWindowIcon(QIcon('logo.png'))
-        self.show()
         self.mainpage()
 
     def mainpage(self):
