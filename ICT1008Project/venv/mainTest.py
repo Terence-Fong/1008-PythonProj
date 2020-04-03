@@ -87,8 +87,13 @@ def programMain(LRTname, HDBadd):
     print(fullSP)
     print(fullSPtranslated)
 
+    lonlat = []
+    for code in fullSP:
+            lonlat.append((infoDict[str(code)]['Latitude'], infoDict[str(code)]['Longitude']))
+
+    return fullSP, fullSPtranslated, busSvc, lonlat
 
     # fullSP is the full path, fullSPtranslated is translated the codes to names
     # busSvc is the bus svc from fullSP[1] to last stop. The last name of the fullSP is the HDB address
 
-# programMain("SOO TECK LRT STATION (PW7)", "85 PUNGGOL CENTRAL 828726")
+programMain("SOO TECK LRT STATION (PW7)", "85 PUNGGOL CENTRAL 828726")
