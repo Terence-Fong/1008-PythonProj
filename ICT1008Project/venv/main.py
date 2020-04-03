@@ -2,9 +2,9 @@ import io
 import sys
 import json
 import folium
-from PyQt5.QtGui import QTextLayout, QTextLine
+from PyQt5.QtGui import QPixmap, QIcon
 
-from mainTest import programMain
+from mainLogic import programMain
 from PyQt5 import QtWidgets, QtWebEngineWidgets
 from PyQt5.QtWidgets import QLabel, QPushButton, QApplication, QMainWindow, QComboBox, QTextEdit
 
@@ -14,6 +14,8 @@ class Window(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle(self.tr("Punggol Transport App"))
         self.setFixedSize(1500, 800)
+        self.setWindowIcon(QIcon('logo.png'))
+        self.show()
         self.mainpage()
 
     def mainpage(self):
@@ -150,26 +152,29 @@ class SearchResult(QMainWindow):
         vlay = QtWidgets.QVBoxLayout(button_container)
         logOutput = QTextEdit()
 
-        self.numOfstops = len(services)
-        if self.numOfstops != 1:
+        self.numOfstops = len(services)-2
+        if self.numOfstops != 0:
             logOutput.insertPlainText("The bus trip will take " + str(self.numOfstops) + " stops\n")
             logOutput.insertPlainText("\nShortest Path found: ")
             logOutput.insertPlainText("\nFrom " + path[0] + " walk to " + path[1] + "\n")
             count = 0
-            bus = services[0]
-            for i in range(len(services)):
-                if bus == services[i] and self.numOfstops != 1:
+            bus = services[1]
+            for i in range(1, len(services)-1):
+                if bus == services[i] and self.numOfstops != 0:
                     count += 1
-                    if i == len(services)-1:
+                    if i == len(services)-2:
                         buses = bus[0]
+                        print(buses)
                         logOutput.insertPlainText("\nTake Bus service " + buses + " for " + str(count)
                                                   + " stops and alight at " + path[i+1] + "\n")
+
                 else:
                     buses = bus[0]
+                    print(buses)
                     logOutput.insertPlainText("\nTake Bus service " + buses + " for " + str(count)
-                                              + " stops and alight at " + path[count + 1] + "\n")
-                    count = 0
-                    bus = services[i + 1]
+                                              + " stops and alight at " + path[i] + "\n")
+                    count = 1
+                    bus = services[i]
             logOutput.insertPlainText("\nWalk from " + path[len(path)-2] + " to " + path[len(path)-1])
         else:
             logOutput.insertPlainText("\nWalk from " + path[0] + " to " + path[2] + "\n")
@@ -194,7 +199,7 @@ class SearchResult(QMainWindow):
         m2 = folium.Map(
             location=mid, zoom_start=15
         )
-        if self.numOfstops == 1:
+        if self.numOfstops == 0:
             del LatLon[1]
         for i in range(len(LatLon)):
             if i == 0:

@@ -2,14 +2,6 @@ import json
 import heapq
 import Dataset
 
-def get_jsonLRT():
-    results = json.loads(open("LRT.json").read())
-    return results
-
-def get_jsonHDB():
-    results = json.loads(open("Punggol_HDB.json").read())
-    return results
-
 def get_jsonRoutes():
     results = json.loads(open("Bus_Route.json").read())
     return results
@@ -18,12 +10,6 @@ def get_jsonStops():
     results = json.loads(open("BusStop.json").read())
     return results
 
-#Need json for every bus stop and lrt
-#Need json for all the bus routes and lrt routes
-
-
-lrt = get_jsonLRT()
-hdb = get_jsonHDB()
 routes = get_jsonRoutes()
 stops = get_jsonStops()
 
@@ -39,10 +25,11 @@ busRoute = []
 def calculate_route(start, end): #1
 
     if start and end:
+            #create dictionary to store routes node
             routes_map = {}
 
             for route in routes:
-                #start to create each node in the route
+                #start to create each node in the route and put in dictionary
                 key = (route["ServiceNo"], route["Direction"])
                 if key not in routes_map:
                     routes_map[key] = []
@@ -55,7 +42,7 @@ def calculate_route(start, end): #1
             for code, service in path:
                 street_name = str(code_map[code]["Description"])
 
-                print(street_name)
+                # print(street_name)
 
             #store all the data into the strings
             no_of_stops = "The bus trip took " + str(len(path)) + " stops"
@@ -65,14 +52,12 @@ def calculate_route(start, end): #1
     else:
         print("Error", "Please enter something")
 
-
 def find_shortest_route(start,end,routes_map):
 
 
     """
     CREATING MAP OF NODES FOR ALL BUS STATIONS IN SINGAPORE
     """
-
     graph = {}
     for service, path in routes_map.items(): #for each bus service
         for route_index in range(len(path) - 1): #for each route
