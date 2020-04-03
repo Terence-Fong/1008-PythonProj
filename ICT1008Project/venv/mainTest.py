@@ -28,7 +28,7 @@ def programMain(LRTname, HDBadd):
     print(LRT)
     print(HDB)
     # HDB = 822312
-    # LRT = 3
+    # LRT = 4
 
     # Get bus stop closest to HDB
     busStop = mapGraph.getHDBBusStop(HDB)
@@ -56,22 +56,20 @@ def programMain(LRTname, HDBadd):
         numStops = numStops2
         busSP = busSP2
 
+    #
     busStopSP = []
     busSvc = []
     for stops in busSP:
         busStopSP.append(stops[0])
         busSvc.append(stops[1])
 
-    # cleaning up the array
-    for x in range(len(busSvc)):
-        if busSvc[x] is None and len(busSvc) != 1:
-            busSvc[x] = busSvc[x+1]
-
+    # Shortest Path from LRT to HDB
     fullSP = []
     fullSP.append(str(LRT))
     fullSP.extend(busStopSP)
     fullSP.append(str(HDB))
 
+    # convert fullSP which is keys into names
     fullSPtranslated = []
     for code in fullSP:
         if len(code) < 3:
@@ -81,18 +79,16 @@ def programMain(LRTname, HDBadd):
         else:
             fullSPtranslated.append(infoDict[str(code)]['Address'])
 
-    print(busStopSP)
-    print(busSvc)
-    print(fullSP)
     print(fullSPtranslated)
-
-    lonlat = []
+    print(busSvc)
+    # put the SP lat and long tuple into an array
+    latlon = []
     for code in fullSP:
-            lonlat.append((float(infoDict[str(code)]['Latitude']), float(infoDict[str(code)]['Longitude'])))
+            latlon.append((float(infoDict[str(code)]['Latitude']), float(infoDict[str(code)]['Longitude'])))
 
-    return fullSPtranslated, busSvc, lonlat
+    return fullSPtranslated, busSvc, latlon
 
     # fullSP is the full path, fullSPtranslated is translated the codes to names
     # busSvc is the bus svc from fullSP[1] to last stop. The last name of the fullSP is the HDB address
 
-# programMain("SOO TECK LRT STATION (PW7)", "85 PUNGGOL CENTRAL 828726")
+# programMain("NIBONG LRT STATION (PW5)", "312 PUNGGOL PARCVISTA SUMANG LINK 820312")
