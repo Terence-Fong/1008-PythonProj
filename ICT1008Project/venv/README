@@ -3,7 +3,14 @@ README.TXT
 1008 Python Project
 DOCUMENTAIION FOR SHORTEST-PATH-FIRST TRANSPORTATION PROJECT - PUNGGOL
 
+About
+------
+The purpose of this project is to find the shortest possible method from one location to another with
+the Bus as a the main mode of Transportation.
+The Djikstra Algorithm is utilized in this Python Project as the calculation algorithm
+for finding the shortest path.
 =======================================
+
 
 ## Necessary Libraries
 `Python3
