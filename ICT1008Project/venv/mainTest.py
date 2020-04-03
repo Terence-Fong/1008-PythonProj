@@ -27,8 +27,8 @@ def programMain(LRTname, HDBadd):
                 LRT = key
     print(LRT)
     print(HDB)
-    # HDB = 821160
-    # LRT = 5 # Soo Teck
+    # HDB = 822312
+    # LRT = 3
 
     # Get bus stop closest to HDB
     busStop = mapGraph.getHDBBusStop(HDB)
@@ -64,7 +64,7 @@ def programMain(LRTname, HDBadd):
 
     # cleaning up the array
     for x in range(len(busSvc)):
-        if busSvc[x] is None:
+        if busSvc[x] is None and len(busSvc) != 1:
             busSvc[x] = busSvc[x+1]
 
     fullSP = []
