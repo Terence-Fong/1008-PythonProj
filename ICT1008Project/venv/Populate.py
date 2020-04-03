@@ -51,21 +51,6 @@ def populateBus(mapGraph, infoDict):
 
     return mapGraph, infoDict
 
-def addBusRoute(mapGraph):
-    with open('Bus_Route.json') as f:
-        route = json.load(f)
-    f.close
-    # Add bus routes
-    for y in range(len(route)):
-        if "LATITUDE" in route[y] and "LATITUDE" in route[y-1]:
-            if route[y]['ServiceNo'] == route[y-1]['ServiceNo'] and route[y]['Direction'] == route[y-1]['Direction']:
-                dist = distance(route[y-1]['LATITUDE'], route[y-1]['LONGTITUDE'], route[y]['LATITUDE'],
-                                route[y]['LONGTITUDE'])
-                mapGraph.addBusEdge(route[y-1]['BusStopCode'], route[y]['BusStopCode'], route[y-1]['ServiceNo'],
-                                    route[y-1]['Direction'], dist)
-
-    return mapGraph
-
 def populateLRT(mapGraph, infoDict):
     with open('LRT.json') as f:
         data = json.load(f)
